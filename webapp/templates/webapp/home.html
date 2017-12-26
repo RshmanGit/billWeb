@@ -13,10 +13,6 @@
             ABHAY CHEM
             </a>
             
-            <span class="navbar-text">
-                CurrentUser: {{ username }}
-            </span>
-            
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -29,10 +25,111 @@
                     <li class="nav-item">
                         <a class="nav-link" href="/full">Full Records</a>
                     </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            User
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <a class="dropdown-item disabled" href="#">User: {{ username }}</a>
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item" href="#">Profile</a>
+                        </div>
+                    </li>
                 </ul>
             </div>
-            
         </nav> 
+        
+        <br><br><br>    
+            
+        <div class="container-fluid">
+            <div class="row">
+                
+                <div class="col">
+                    <div class ="card">
+                        <div class="card-header" style="background-color: #607D8B">
+                            Pending Orders
+                        </div>
+                        <div class="card-body">
+                            
+                            {% for i in pendOrder %}
+                            
+                            <div class="card">
+                                <div class="card-body">
+                                    <h4 class="card-title">Name: {{ i.name }}</h4>
+                                    <h6 class="card-subtitle mb-2 text-muted">Village: {{ i.village }}</h6>
+                                    <hr>
+                                    <p class="card-text">Delivery Date:{{ i.delivery_date }} </p>
+                                    <p class="card-text">Delivered: {{ i.quant_delivered }}</p>
+                                    <P class="card-text">Total Quantity: {{ i.quantity }}</P>
+                                    <hr>
+                                    <h6 class="card-subtitle mb-2 text-muted">Order Date: {{ i.order_date }}</h6>
+                                </div>
+                            </div>
+                            <br>
+                            
+                            {% endfor %}
+                            
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col">
+                    <div class ="card">
+                        <div class="card-header" style="background-color: #B0BEC5">
+                            Today's Raw Material orders
+                        </div>
+                        <div class="card-body">
+                            
+                            {% for i in todayRawMat %}
+                            
+                            <div class="card">
+                                <div class="card-body">
+                                    <h4 class="card-title">Name: {{ i.name }}</h4>
+                                    <h6 class="card-subtitle mb-2 text-muted">Description: {{ i.desc }}</h6>
+                                    <hr>
+                                    <p class="card-text">Gate Pass Number: {{ i.gatePass }}</p>
+                                    <hr>
+                                    <h6 class="card-subtitle mb-2 text-muted">Order Date: {{ i.order_date }}</h6>
+                                </div>
+                            </div>
+                            
+                            {% endfor %}
+                            
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col">
+                    <div class ="card">
+                        <div class="card-header" style="background-color: #607D8B">
+                            Today's Expenses
+                        </div>
+                        <div class="card-body">
+                            
+                            {% for i in todayExps %}
+                            
+                            <div class="card">
+                                <div class="card-body">
+                                    <h4 class="card-title">Description: {{ i.desc }}</h4>
+                                    <h6 class="card-subtitle mb-2 text-muted">Cost: {{ i.cost }}</h6>
+                                    <hr>
+                                    <p class="card-text">Cash in Hand after expense: {{ i.cashInHand }}</p>
+                                    <hr>
+                                    <h6 class="card-subtitle mb-2 text-muted">Date: {{ i.date }}</h6>
+                                </div>
+                            </div>
+                            
+                            {% endfor %}
+                            
+                        </div>
+                    </div>
+                </div>
+                
+            </div>            
+        </div>
+            
+            
+            
         
     
         <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>

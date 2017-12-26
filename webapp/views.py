@@ -4,6 +4,7 @@ from django.template import loader
 from django.http import HttpResponse
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.models import User
+import requests
 
 login_fail = False
 errorflag = False
@@ -23,9 +24,13 @@ def autho(request):
     try:
         user = authenticate(username=request.POST['username'], password=request.POST['password'])
         if user is not None:
+            obtdData = obtainTodayData()
             login(request, user)
             html = loader.get_template("webapp/home.html")
             context = {
+                "pendOrder": obtdData['pendOrder'],
+                "todayRawMat": obtdData['todayRawMat'],
+                "todayExps": obtdData['todayExps'],
                 "username": user.username,
             }
             return HttpResponse(html.render(context, request))
@@ -39,7 +44,7 @@ def autho(request):
                 "newRegister": False,
             }
             return HttpResponse(html.render(context, request))
-    except:
+    except Exception as e:
         html = loader.get_template("webapp/index.html")
         login_fail = False
         errorflag = True
@@ -48,13 +53,18 @@ def autho(request):
             "errorflag": errorflag,
             "newRegister": False,
         }
+        print(e)
         return HttpResponse(html.render(context, request))
     
 def home(request):
     try:
         if request.user is not None:
+            obtdData = obtainTodayData()
             html = loader.get_template("webapp/home.html")
             context = {
+                "pendOrder": obtdData['pendOrder'],
+                "todayRawMat": obtdData['todayRawMat'],
+                "todayExps": obtdData['todayExps'],
                 "username": request.user.username,
             }
             return HttpResponse(html.render(context, request))
@@ -68,7 +78,7 @@ def home(request):
                 "newRegister": False,
             }
             return HttpResponse(html.render(context, request))
-    except:
+    except Exception as e:
         html = loader.get_template("webapp/index.html")
         errorflag = True
         login_fail = False
@@ -77,6 +87,7 @@ def home(request):
             "errorflag": errorflag,
             "newRegister": False,
         }
+        print(e)
         return HttpResponse(html.render(context, request))
     
 def register(request):
@@ -114,3 +125,25 @@ def registerReq(request):
             "errorflag": True,
         }
         return HttpResponse(html.render(context,request))
+    
+def obtainTodayData():
+    try:
+        data = {}
+        data['pendOrder'] = []
+        data['todayRawMat'] = []
+        data['todayExps'] = []
+        URL = "http://localhost:4000/api/v1/"
+        keys = ['pendOrder','todayRawMat','todayExps']
+        for i in keys:
+            PARAMS = {}
+            temp = requests.get(url = URL+i, params = PARAMS)
+            temp = temp.json()
+            templist = []
+            for obj in temp['objects']:
+                templist.append(obj)
+            data[i] = templist
+            
+        return data
+        
+    except:
+        return False
