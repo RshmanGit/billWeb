@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+    
+    <head>
+        <title>Abhay Chem</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
+    </head>
+    
+    
+    <body>
+        
+        <nav class="navbar navbar-light" style="background-color: #43A047">
+            <a class="navbar-brand" href="/home">
+            </a>
+        </nav>        
+        
+        <br><br><br>
+        
+        <div class="container">
+            <form method="post" action="login/">{% csrf_token %}
+                <div class="form-group">
+                    <label for="usernameinput">Username</label>
+                    <input type="text" class="form-control" id="usernameinput" aria- describedby="userHelp" placeholder="Enter Username" name="username">
+                    <small id="userHelp" class="form-text text-muted">Enter the username that you chose during registration</small>
+                </div>
+                <div class="form-group">
+                    <label for="Password1">Password</label>
+                    <input type="password" class="form-control" id="Password1" placeholder="Password" name="password">
+                </div>
+                {% if login_fail %}
+                   <div class="alert alert-danger" role="alert">
+                        The username or password was incorrect. Please try again
+                    </div> 
+                {% endif %}
+                {% if errorflag %}
+                    <div class="alert alert-info" role="alert">
+                        Sorry some error occured. Please log in again
+                    </div>
+                {% endif %}
+                {% if newRegister %}
+                    <div class="alert alert-success" role="alert">
+                        Registration done. Login in again to begin session.
+                    </div>
+                {% endif %}
+                <button type="submit" class="btn btn-success">Submit</button>
+                <small class="navbar-text-small">
+                <a href="/register">Not a member?</a>
+                </small>
+                
+            </form>
+        </div>
+        
+        
+        <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js" integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4" crossorigin="anonymous"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js" integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1" crossorigin="anonymous"></script>
+    </body>
+</html>
