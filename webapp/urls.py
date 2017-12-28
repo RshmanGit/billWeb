@@ -11,4 +11,7 @@ urlpatterns = [
     url(r'^register/registerReq/login/',views.autho),
     url(r'^insertorders/$',views.insertOrder),
     url(r'^insertorders/insertReq/$',views.insertOrderReq),
+    url(r'^insertrawMat/$',views.insertRawMat),
+    url(r'^insertrawMat/insertReq/$',views.insertRawMatReq),
+    
 ]
