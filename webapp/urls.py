@@ -9,4 +9,6 @@ urlpatterns = [
     url(r'^register/$',views.register),
     url(r'^register/registerReq/$',views.registerReq),
     url(r'^register/registerReq/login/',views.autho),
+    url(r'^insertorders/$',views.insertOrder),
+    url(r'^insertorders/insertReq/$',views.insertOrderReq),
 ]

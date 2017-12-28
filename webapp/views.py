@@ -4,7 +4,10 @@ from django.template import loader
 from django.http import HttpResponse
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.models import User
+from datetime import date
 import requests
+from bson import json_util
+import json
 
 login_fail = False
 errorflag = False
@@ -147,3 +150,62 @@ def obtainTodayData():
         
     except:
         return False
+    
+def insertOrder(request):
+    try:
+        html = loader.get_template("webapp/insertO.html")
+        context = {
+            "username": request.user.username,
+        }
+        return HttpResponse(html.render(context, request))
+    
+    except Exception as e:
+        print(e)
+        html = loader.get_template("webapp/index.html")
+        context = {
+            "login_fail": login_fail,
+            "errorflag": errorflag,
+            "newRegister": False,
+        }
+        return HttpResponse(html.render(context, request))
+    
+def insertOrderReq(request):
+    try:
+        URL = "http://localhost:4000/api/v1/order/"
+        
+        orderId = int(request.POST['id'])
+        Id = (orderId * 10000) + (date.today().year)
+        name = request.POST['name']
+        village = request.POST['village']
+        quantity = request.POST['quantity']
+        d_date = request.POST['ddate']
+        o_date = date.today()
+        
+        DATA = {
+            "delivery_date": str(d_date),
+            "id": Id,
+            "name": name,
+            "order_date": str(o_date),
+            "quant_delivered": 0,
+            "quantity": quantity,
+            "village": village
+        }
+        
+        DATA = json.dumps(DATA, default=json_util.default)
+        
+        print(DATA)
+        
+        r = requests.post(url = URL, data = DATA)
+        
+        ret = home(request)
+        return ret
+        
+    except Exception as e:
+        print('[-] '+str(e))
+        html = loader.get_template("webapp/index.html")
+        context = {
+            "login_fail": False,
+            "errorflag": True,
+            "newRegister": False,
+        }
+        return HttpResponse(html.render(context, request))
