@@ -241,3 +241,50 @@ def insertRawMatReq(request):
         print('[-] '+str(e))
         html = errorIndex(request)
         return html
+    
+def insertExps(request):
+    try:
+        html = loader.get_template("webapp/insertE.html")
+        context = {
+            "username": request.user.username,
+        }
+        return HttpResponse(html.render(context, request))
+        
+    except Exception as e:
+        print('[-] '+str(e))
+        html = errorIndex(request)
+        return html
+    
+def insertExpsReq(request):
+    try:
+        URL = "http://localhost:4000/api/v1/exps/"
+        
+        desc = request.POST['desc']
+        cost = request.POST['cost']
+        cashInHand = request.POST['cashinhand']
+        o_date = date.today()
+        
+        DATA = {
+            "desc": desc,
+            "cost": cost,
+            "date": str(date),
+            "cashInHand": cashInHand,
+        }
+    
+        DATA = json.dumps(DATA, default=json_util.default)
+        
+        HEADERS = {
+            "Content-Type": "application/json",
+        }
+        
+        r = request.post(url = URL, data = DATA, headers = HEADERS)
+        
+        ret = home(request)
+        
+        return ret
+    
+    except Exception as e:
+        print('[-] '+str(e))
+        html = errorIndex(request)
+        return html
+    

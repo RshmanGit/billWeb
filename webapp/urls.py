@@ -13,5 +13,6 @@ urlpatterns = [
     url(r'^insertorders/insertReq/$',views.insertOrderReq),
     url(r'^insertrawMat/$',views.insertRawMat),
     url(r'^insertrawMat/insertReq/$',views.insertRawMatReq),
-    
+    url(r'^insertexps/$',views.insertExps),
+    url(r'^insertexps/insertReq/$',views.insertExpsReq),
 ]
