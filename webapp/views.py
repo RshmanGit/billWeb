@@ -23,6 +23,27 @@ def loginreq(request):
     }
     return HttpResponse(html.render(context,request))
 
+def errorIndex(request):
+    html = loader.get_template("webapp/index.html")
+    context = {
+        "login_fail": False,
+        "errorflag": True,
+        "newRegister": False,
+    }
+    return HttpResponse(html.render(context, request))
+
+
+def loginFail(request):
+    html = loader.get_template("webapp/index.html")
+    context = {
+        "login_fail": True,
+        "errorflag": False,
+        "newRegister": False,
+    }
+    return HttpResponse(html.render(context, request))
+
+
+
 def autho(request):
     try:
         user = authenticate(username=request.POST['username'], password=request.POST['password'])
@@ -38,26 +59,13 @@ def autho(request):
             }
             return HttpResponse(html.render(context, request))
         else:
-            html = loader.get_template("webapp/index.html")
-            login_fail = True
-            errorflag = False
-            context = {
-                "login_fail": login_fail,
-                "errorflag": errorflag,
-                "newRegister": False,
-            }
-            return HttpResponse(html.render(context, request))
+            html = loginFail(request)
+            return html
+    
     except Exception as e:
-        html = loader.get_template("webapp/index.html")
-        login_fail = False
-        errorflag = True
-        context = {
-            "login_fail": login_fail,
-            "errorflag": errorflag,
-            "newRegister": False,
-        }
-        print(e)
-        return HttpResponse(html.render(context, request))
+        print('[-] '+str(e))
+        html = errorIndex(request)
+        return html
     
 def home(request):
     try:
@@ -72,26 +80,13 @@ def home(request):
             }
             return HttpResponse(html.render(context, request))
         else:
-            html = loader.get_template("webapp/index.html")
-            login_fail = True
-            errorflag = False
-            context = {
-                "login_fail": login_fail,
-                "errorflag": errorflag,
-                "newRegister": False,
-            }
-            return HttpResponse(html.render(context, request))
+            html = loginFail(request)
+            return html
+    
     except Exception as e:
-        html = loader.get_template("webapp/index.html")
-        errorflag = True
-        login_fail = False
-        context = {
-            "login_fail": login_fail,
-            "errorflag": errorflag,
-            "newRegister": False,
-        }
-        print(e)
-        return HttpResponse(html.render(context, request))
+        print('[-] '+str(e))
+        html = errorIndex(request)
+        return html
     
 def register(request):
     try:
@@ -100,16 +95,11 @@ def register(request):
             "errorflag": False,
         }
         return HttpResponse(html.render(context,request))
-    except:
-        html = loader.get_template("webapp/index.html")
-        errorflag = True
-        login_fail = False
-        context = {
-            "login_fail": login_fail,
-            "errorflag": errorflag,
-            "newRegister": False,
-        }
-        return HttpResponse(html.render(context,request))
+    
+    except Exception as e:
+        print('[-] '+str(e))
+        html = errorIndex(request)
+        return html
     
 def registerReq(request):
     try:
@@ -122,12 +112,11 @@ def registerReq(request):
             "newRegister": True,
         }
         return HttpResponse(html.render(context,request))
-    except:
-        html = loader.get_template("webapp/registerPage.html")
-        context = {
-            "errorflag": True,
-        }
-        return HttpResponse(html.render(context,request))
+    
+    except Exception as e:
+        print('[-] '+str(e))
+        html = errorIndex(request)
+        return html
     
 def obtainTodayData():
     try:
@@ -160,14 +149,9 @@ def insertOrder(request):
         return HttpResponse(html.render(context, request))
     
     except Exception as e:
-        print(e)
-        html = loader.get_template("webapp/index.html")
-        context = {
-            "login_fail": login_fail,
-            "errorflag": errorflag,
-            "newRegister": False,
-        }
-        return HttpResponse(html.render(context, request))
+        print('[-] '+str(e))
+        html = errorIndex(request)
+        return html
     
 def insertOrderReq(request):
     try:
@@ -188,24 +172,72 @@ def insertOrderReq(request):
             "order_date": str(o_date),
             "quant_delivered": 0,
             "quantity": quantity,
-            "village": village
+            "village": village,
+        }
+        
+        HEADERS = {
+            "Content-Type": "application/json",
         }
         
         DATA = json.dumps(DATA, default=json_util.default)
         
         print(DATA)
         
-        r = requests.post(url = URL, data = DATA)
+        r = requests.post(url = URL, data = DATA, headers = HEADERS)
         
         ret = home(request)
         return ret
         
     except Exception as e:
         print('[-] '+str(e))
-        html = loader.get_template("webapp/index.html")
+        html = errorIndex(request)
+        return html
+    
+
+def insertRawMat(request):
+    try:
+        html = loader.get_template("webapp/insertR.html")
         context = {
-            "login_fail": False,
-            "errorflag": True,
-            "newRegister": False,
+            "username": request.user.username,
         }
         return HttpResponse(html.render(context, request))
+        
+    except Exception as e:
+        print('[-] '+str(e))
+        html = errorIndex(request)
+        return html
+        
+def insertRawMatReq(request):
+    try:
+        URL = "http://localhost:4000/api/v1/rawMat/"
+        
+        gate = int(request.POST['gatepass'])
+        gatepass = (gate * 10000) + (date.today().year)
+        name = request.POST['name']
+        desc = request.POST['desc']
+        weight = request.POST['weight']
+        o_date = date.today()
+        
+        DATA = {
+            "gatePass": gatepass,
+            "name": name,
+            "desc": desc,
+            "order_date": str(o_date),
+            "weight": weight,
+        }
+        
+        DATA = json.dumps(DATA, default=json_util.default)
+        
+        HEADERS = {
+            "Content-Type": "application/json",
+        }
+        
+        r = requests.post(url = URL, data = DATA, headers = HEADERS)
+        
+        ret = home(request)
+        return ret
+        
+    except Exception as e:
+        print('[-] '+str(e))
+        html = errorIndex(request)
+        return html
