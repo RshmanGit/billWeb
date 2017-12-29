@@ -69,7 +69,7 @@ def autho(request):
     
 def home(request):
     try:
-        if request.user is not None:
+        if request.user:
             obtdData = obtainTodayData()
             html = loader.get_template("webapp/home.html")
             context = {
@@ -267,7 +267,7 @@ def insertExpsReq(request):
         DATA = {
             "desc": desc,
             "cost": cost,
-            "date": str(date),
+            "date": str(o_date),
             "cashInHand": cashInHand,
         }
     
@@ -277,7 +277,7 @@ def insertExpsReq(request):
             "Content-Type": "application/json",
         }
         
-        r = request.post(url = URL, data = DATA, headers = HEADERS)
+        r = requests.post(url = URL, data = DATA, headers = HEADERS)
         
         ret = home(request)
         
