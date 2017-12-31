@@ -32,6 +32,27 @@ def errorIndex(request):
     }
     return HttpResponse(html.render(context, request))
 
+def errorHome(request):
+    try:
+        if request.user:
+            obtdData = obtainTodayData()
+            html = loader.get_template("webapp/home.html")
+            context = {
+                "errorflag": True,
+                "pendOrder": obtdData['pendOrder'],
+                "todayRawMat": obtdData['todayRawMat'],
+                "todayExps": obtdData['todayExps'],
+                "username": request.user.username,
+            }
+            return HttpResponse(html.render(context, request))
+        else:
+            html = loginFail(request)
+            return html
+    
+    except Exception as e:
+        print('[-] '+str(e))
+        html = errorIndex(request)
+        return html
 
 def loginFail(request):
     html = loader.get_template("webapp/index.html")
@@ -117,29 +138,7 @@ def registerReq(request):
         print('[-] '+str(e))
         html = errorIndex(request)
         return html
-    
-def obtainTodayData():
-    try:
-        data = {}
-        data['pendOrder'] = []
-        data['todayRawMat'] = []
-        data['todayExps'] = []
-        URL = "http://localhost:4000/api/v1/"
-        keys = ['pendOrder','todayRawMat','todayExps']
-        for i in keys:
-            PARAMS = {}
-            temp = requests.get(url = URL+i, params = PARAMS)
-            temp = temp.json()
-            templist = []
-            for obj in temp['objects']:
-                templist.append(obj)
-            data[i] = templist
-            
-        return data
-        
-    except:
-        return False
-    
+      
 def insertOrder(request):
     try:
         html = loader.get_template("webapp/insertO.html")
@@ -150,7 +149,7 @@ def insertOrder(request):
     
     except Exception as e:
         print('[-] '+str(e))
-        html = errorIndex(request)
+        html = errorHome(request)
         return html
     
 def insertOrderReq(request):
@@ -190,7 +189,7 @@ def insertOrderReq(request):
         
     except Exception as e:
         print('[-] '+str(e))
-        html = errorIndex(request)
+        html = errorHome(request)
         return html
     
 
@@ -204,7 +203,7 @@ def insertRawMat(request):
         
     except Exception as e:
         print('[-] '+str(e))
-        html = errorIndex(request)
+        html = errorHome(request)
         return html
         
 def insertRawMatReq(request):
@@ -239,7 +238,7 @@ def insertRawMatReq(request):
         
     except Exception as e:
         print('[-] '+str(e))
-        html = errorIndex(request)
+        html = errorHome(request)
         return html
     
 def insertExps(request):
@@ -252,7 +251,7 @@ def insertExps(request):
         
     except Exception as e:
         print('[-] '+str(e))
-        html = errorIndex(request)
+        html = errorHome(request)
         return html
     
 def insertExpsReq(request):
@@ -285,6 +284,58 @@ def insertExpsReq(request):
     
     except Exception as e:
         print('[-] '+str(e))
-        html = errorIndex(request)
+        html = errorHome(request)
         return html
     
+def obtainTodayData():
+    try:
+        data = {}
+        data['pendOrder'] = []
+        data['todayRawMat'] = []
+        data['todayExps'] = []
+        URL = "http://localhost:4000/api/v1/"
+        keys = ['pendOrder','todayRawMat','todayExps']
+        for i in keys:
+            PARAMS = {}
+            temp = requests.get(url = URL+i, params = PARAMS)
+            temp = temp.json()
+            templist = []
+            for obj in temp['objects']:
+                templist.append(obj)
+            data[i] = templist
+            
+        return data
+        
+    except:
+        return False
+    
+def fullorderscall():
+    try:
+        URL = "localhost:4000/api/v1/order/"
+        data = []
+        PARAMS = {}
+        temp = requests.get(url = URL, params = PARAMS)
+        temp = temp.json()
+        for obj in temp['objects']:
+            data.append(obj)
+        
+        return data
+        
+    except Exception as e:
+        return False
+    
+def fullorders(request):
+    try:
+        data = fullorderscall()
+        context = {
+            "username": request.user.username,
+            "orderdata": data
+        }
+        html = loader.get_template("webapp/fullorder.html")
+        return HttpResponse(html.render(context, request))        
+        
+        
+    except Exception as e:
+        print('[-] '+str(e))
+        html = errorHome(request)
+        return html
