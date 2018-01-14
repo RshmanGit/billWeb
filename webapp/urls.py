@@ -4,7 +4,8 @@ from . import views
 
 urlpatterns = [
     url(r'^$', views.loginreq),
-    url(r'^login/', views.autho),
+    url(r'^login/$', views.autho),
+    url(r'login/', views.autho),
     url(r'^home/',views.home),
     url(r'^register/$',views.register),
     url(r'^register/registerReq/$',views.registerReq),
@@ -16,4 +17,7 @@ urlpatterns = [
     url(r'^insertexps/$',views.insertExps),
     url(r'^insertexps/insertReq/$',views.insertExpsReq),
     url(r'^orders/', views.fullorders),
+    url(r'^rawMat/', views.fullrawmat),
+    url(r'^exps/', views.fullexps),
+    url(r'^logout/$',views.logoutreq),
 ]

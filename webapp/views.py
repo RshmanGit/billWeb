@@ -2,7 +2,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import render
 from django.template import loader
 from django.http import HttpResponse
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from datetime import date
 import requests
@@ -17,8 +17,8 @@ errorflag = False
 def loginreq(request):
     html = loader.get_template("webapp/index.html")
     context = {
-        "login_fail": login_fail,
-        "errorflag": errorflag,
+        "login_fail": False,
+        "errorflag": False,
         "newRegister": False,
     }
     return HttpResponse(html.render(context,request))
@@ -311,7 +311,7 @@ def obtainTodayData():
     
 def fullorderscall():
     try:
-        URL = "localhost:4000/api/v1/order/"
+        URL = "http://localhost:4000/api/v1/order/"
         data = []
         PARAMS = {}
         temp = requests.get(url = URL, params = PARAMS)
@@ -326,10 +326,11 @@ def fullorderscall():
     
 def fullorders(request):
     try:
+        data = []
         data = fullorderscall()
         context = {
             "username": request.user.username,
-            "orderdata": data
+            "orderdata": data,
         }
         html = loader.get_template("webapp/fullorder.html")
         return HttpResponse(html.render(context, request))        
@@ -339,3 +340,73 @@ def fullorders(request):
         print('[-] '+str(e))
         html = errorHome(request)
         return html
+    
+def fullrawmatscall():
+    try:
+        URL = "http://localhost:4000/api/v1/rawMat/"
+        data = []
+        PARAMS = {}
+        temp = requests.get(url = URL, params = PARAMS)
+        temp = temp.json()
+        for obj in temp['objects']:
+            data.append(obj)
+        
+        return data
+        
+    except Exception as e:
+        return False
+    
+def fullrawmat(request):
+    try:
+        data = []
+        data = fullrawmatscall()
+        context = {
+            "username": request.user.username,
+            "rawmatdata": data,
+        }
+        html = loader.get_template("webapp/fullrawmat.html")
+        return HttpResponse(html.render(context, request))        
+        
+        
+    except Exception as e:
+        print('[-] '+str(e))
+        html = errorHome(request)
+        return html
+    
+def fullexpscall():
+    try:
+        URL = "http://localhost:4000/api/v1/exps/"
+        data = []
+        PARAMS = {}
+        temp = requests.get(url = URL, params = PARAMS)
+        temp = temp.json()
+        for obj in temp['objects']:
+            data.append(obj)
+        
+        return data
+        
+    except Exception as e:
+        return False
+    
+def fullexps(request):
+    try:
+        data = []
+        data = fullexpscall()
+        context = {
+            "username": request.user.username,
+            "expsdata": data,
+        }
+        html = loader.get_template("webapp/fullexps.html")
+        return HttpResponse(html.render(context, request))        
+        
+        
+    except Exception as e:
+        print('[-] '+str(e))
+        html = errorHome(request)
+        return html
+    
+def logoutreq(request):
+    logout(request)
+    html = loader.get_template("webapp/index.html")
+    context = {}
+    return HttpResponse(html.render(context, request))
