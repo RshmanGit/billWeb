@@ -54,6 +54,29 @@ def errorHome(request):
         html = errorIndex(request)
         return html
 
+def sucHome(request):
+    try:
+        if request.user:
+            obtdData = obtainTodayData()
+            html = loader.get_template("webapp/home.html")
+            context = {
+                "errorflag": False,
+                "orderCompleted": True,
+                "pendOrder": obtdData['pendOrder'],
+                "todayRawMat": obtdData['todayRawMat'],
+                "todayExps": obtdData['todayExps'],
+                "username": request.user.username,
+            }
+            return HttpResponse(html.render(context, request))
+        else:
+            html = loginFail(request)
+            return html
+    
+    except Exception as e:
+        print('[-] '+str(e))
+        html = errorIndex(request)
+        return html
+    
 def loginFail(request):
     html = loader.get_template("webapp/index.html")
     context = {
@@ -317,7 +340,7 @@ def fullorderscall():
         temp = requests.get(url = URL, params = PARAMS)
         temp = temp.json()
         for obj in temp['objects']:
-            data.append(obj)
+            data = [obj] + data
         
         return data
         
@@ -349,7 +372,7 @@ def fullrawmatscall():
         temp = requests.get(url = URL, params = PARAMS)
         temp = temp.json()
         for obj in temp['objects']:
-            data.append(obj)
+            data = [obj] + data
         
         return data
         
@@ -381,7 +404,7 @@ def fullexpscall():
         temp = requests.get(url = URL, params = PARAMS)
         temp = temp.json()
         for obj in temp['objects']:
-            data.append(obj)
+            data = [obj] + data
         
         return data
         
@@ -410,3 +433,124 @@ def logoutreq(request):
     html = loader.get_template("webapp/index.html")
     context = {}
     return HttpResponse(html.render(context, request))
+
+def getOrder(Id):
+    URL = "http://localhost:4000/api/v1/order/" + str(Id)
+    data = []
+    PARAMS = {}
+    temp = requests.get(url = URL, params = PARAMS)
+    temp = temp.json()
+    
+    return temp
+
+def updateOrder(request,Id):
+    
+    order = getOrder(Id)
+    html = loader.get_template("webapp/updateOrder.html")
+    context = {
+        "order": order,
+    }
+    
+    return HttpResponse(html.render(context, request))
+
+def updateOrderReq(request,Id):
+    try:
+        URL = "http://localhost:4000/api/v1/order/"
+        
+        order = getOrder(Id)
+        
+        orderId = order['id']
+        name = order['name']
+        village = order['village']
+        quantity = request.POST['quantity']
+        quant_delivered = request.POST['quantity_delivered']
+        d_date = request.POST['ddate']
+        o_date = order['order_date']
+        
+        delivered = True
+        
+        if(quant_delivered < quantity):
+            delivered = False
+            
+        DATA = {
+            "delivery_date": str(d_date),
+            "id": orderId,
+            "name": name,
+            "order_date": str(o_date),
+            "quant_delivered": quant_delivered,
+            "quantity": quantity,
+            "village": village,
+            "delivered": delivered,
+        }
+        
+        HEADERS = {
+            "Content-Type": "application/json",
+        }
+        
+        DATA = json.dumps(DATA, default=json_util.default)
+        
+        print(DATA)
+        r = requests.post(url = URL, data = DATA, headers = HEADERS)
+        
+        ret = sucHome(request)
+        return ret
+    except Exception as e:
+        print(e)
+        html = errorHome(request)
+        return HttpResponse(html)
+    
+def getRawMat(gatePass):
+    URL = "http://localhost:4000/api/v1/rawMat/" + str(gatePass)
+    data = []
+    PARAMS = {}
+    temp = requests.get(url = URL, params = PARAMS)
+    temp = temp.json()
+    
+    return temp
+
+def updateRawMat(request,gatePass):
+    
+    rawMat = getRawMat(gatePass)
+    html = loader.get_template("webapp/updateRawMat.html")
+    context = {
+        "rawMat": rawMat,
+    }
+    
+    return HttpResponse(html.render(context, request))
+
+def updateRawMatReq(request, gatePass):
+    
+    try:
+        URL = "http://localhost:4000/api/v1/rawMat/"
+        
+        rawMat = getRawMat(gatePass)
+        
+        gatePassr = rawMat['gatePass']
+        name = rawMat['name']
+        desc = request.POST['desc']
+        o_date = request.POST['odate']
+        weight = request.POST['weight']
+        
+        DATA = {
+            "gatePass": gatePassr,
+            "name": name,
+            "desc": desc,
+            "order_date": o_date,
+            "weight": weight,
+        }
+        
+        HEADERS = {
+            "Content-Type": "application/json",
+        }
+        
+        DATA = json.dumps(DATA, default=json_util.default)
+        
+        print(DATA)
+        r = requests.post(url = URL, data = DATA, headers = HEADERS)
+        
+        ret = home(request)
+        return ret
+    except Exception as e:
+        print(e)
+        html = errorHome(request)
+        return HttpResponse(html)

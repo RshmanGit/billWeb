@@ -69,7 +69,17 @@
                 Some errror occured please try again.
             </div>
         
-            <br><br><br>
+            <br><br>
+        
+        {% endif %}
+        
+        {% if orderCompleted %}
+            
+            <div class="alert alert-success" role="alert">
+                Order Succesfully completed. Removed from pending orders.
+            </div>
+        
+            <br><br>
         
         {% endif %}
             
@@ -98,7 +108,9 @@
                                     <hr>
                                     <h6 class="card-subtitle mb-2 text-muted">Order Date: {{ i.order_date }}</h6>
                                     <hr>
-                                    <button type="button" class="btn btn-info btn-lg btn-block">Update</button>
+                                    <a href="/editOrder/{{ i.id }}/">
+                                        <button type="button" class="btn btn-info btn-lg btn-block">Update</button>
+                                    </a>
                                 </div>
                                 {% if i.delivered %}
                                     <div class="card-footer bg-success">
@@ -138,26 +150,29 @@
                             Today's Raw Material orders
                         </div>
                         <div class="card-body">
-                            {% if todayRawMat%}
-                            {% for i in todayRawMat %}
+                            {% if todayRawMat %}
                             
-                            <div class="card">
-                                <div class="card-body">
-                                    <h4 class="card-title">Name: {{ i.name }}</h4>
-                                    <h6 class="card-subtitle mb-2 text-muted">Description: {{ i.desc }}</h6>
-                                    <hr>
-                                    <p class="card-text">Gate Pass Number: {{ i.gatePass }}</p>
-                                    <hr>
-                                    <h6 class="card-subtitle mb-2 text-muted">Order Date: {{ i.order_date }}</h6>
-                                    <hr>
-                                    <button type="button" class="btn btn-info btn-lg btn-block">Update</button>
-                                </div>
+                                {% for i in todayRawMat %}
+                            
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h4 class="card-title">Name: {{     i.name }}</h4>
+                                        <h6 class="card-subtitle mb-2 text-muted">Description: {{ i.desc }}</h6>
+                                        <hr>
+                                        <p class="card-text">Gate Pass Number: {{ i.gatePass }}</p>
+                                        <hr>
+                                        <h6 class="card-subtitle mb-2 text-muted">Order Date: {{ i.order_date }}</h6>
+                                        <hr>
+                                        <a href="/editRawMat/{{ i.gatePass }}/">
+                                            <button type="button" class="btn btn-info btn-lg btn-block">Update</button>
+                                        </a>
+                                    </div>
                                 
-                            </div>
+                                </div>
                             
-                            <br>
+                                <br>
+                                {% endfor %}
                             
-                            {% endfor %}
                             {% else %}
                             
                             <div class="card mb-3">
@@ -191,8 +206,6 @@
                                     <p class="card-text">Cash in Hand after expense: {{ i.cashInHand }}</p>
                                     <hr>
                                     <h6 class="card-subtitle mb-2 text-muted">Date: {{ i.date }}</h6>
-                                    <hr>
-                                    <button type="button" class="btn btn-info btn-lg btn-block">Update</button>
                                 </div>
                                 
                             </div>

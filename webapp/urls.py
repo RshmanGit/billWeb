@@ -20,4 +20,8 @@ urlpatterns = [
     url(r'^rawMat/', views.fullrawmat),
     url(r'^exps/', views.fullexps),
     url(r'^logout/$',views.logoutreq),
+    url(r'editOrder/(?P<Id>[0-9]+)/$',views.updateOrder),
+    url(r'editOrder/(?P<Id>[0-9]+)/updateReq/$',views.updateOrderReq),
+    url(r'editRawMat/(?P<gatePass>[0-9]+)/$',views.updateRawMat),
+    url(r'editRawMat/(?P<gatePass>[0-9]+)/updateReq/$',views.updateRawMatReq),
 ]
