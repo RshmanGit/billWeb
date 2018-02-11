@@ -181,16 +181,21 @@ def insertOrderReq(request):
         
         orderId = int(request.POST['id'])
         Id = (orderId * 10000) + (date.today().year)
-        name = request.POST['name']
+        custname = request.POST['custname']
+        prodname = request.POST['prodname']
+        phonenumb = request.POST['phnumber']
         village = request.POST['village']
         quantity = request.POST['quantity']
         d_date = request.POST['ddate']
         o_date = date.today()
         
+        
         DATA = {
             "delivery_date": str(d_date),
             "id": Id,
-            "name": name,
+            "customer_name": custname,
+            "product_name": prodname,
+            "mobile_number": phonenumb,
             "order_date": str(o_date),
             "quant_delivered": 0,
             "quantity": quantity,
@@ -460,7 +465,9 @@ def updateOrderReq(request,Id):
         order = getOrder(Id)
         
         orderId = order['id']
-        name = order['name']
+        custname = order['customer_name']
+        prodname = request.POST['prodname']
+        phnumb = request.POST['phnumber']
         village = order['village']
         quantity = request.POST['quantity']
         quant_delivered = request.POST['quantity_delivered']
@@ -475,7 +482,9 @@ def updateOrderReq(request,Id):
         DATA = {
             "delivery_date": str(d_date),
             "id": orderId,
-            "name": name,
+            "customer_name": custname,
+            "product_name": prodname,
+            "mobile_number": phnumb,
             "order_date": str(o_date),
             "quant_delivered": quant_delivered,
             "quantity": quantity,

@@ -76,7 +76,7 @@
                     <div class="col">
                         <div class="form-group">
                             <label for="ordername">Name</label>
-                            <input type="text" class="form-control" id="ordername" name="name" value="{{ order.name }}" disabled>
+                            <input type="text" class="form-control" id="ordername" name="name" value="{{ order.customer_name }}" disabled>
                         </div>
                     </div>
                     
@@ -87,10 +87,23 @@
                         </div>
                     </div>
                     
+                    <div class="col">
+                        <div class="form-group">
+                            <label for="phonenumb">Phone Number</label>
+                            <input type="text" class="form-control" id="phonenumb" name="phnumber" value="{{ order.mobile_number }}">
+                        </div>
+                    </div>
+                    
                 </div>
                 
                 <div class="row">
                 
+                    <div class="col">
+                    <div class="form-group">
+                        <label for="prod">Product Name</label>
+                        <input type="text" class="form-control" id="prod" name="prodname" value="{{order.product_name}}">
+                    </div>
+                    </div>
                     <div class="col">
                     <div class="form-group">
                         <label for="orderquantity">Quantity</label>

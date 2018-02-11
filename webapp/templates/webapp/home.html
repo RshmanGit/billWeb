@@ -99,12 +99,14 @@
                             
                             <div class="card">
                                 <div class="card-body">
-                                    <h4 class="card-title">Name: {{ i.name }}</h4>
+                                    <h4 class="card-title">Name: {{ i.customer_name }}</h4>
                                     <h6 class="card-subtitle mb-2 text-muted">ID: {{ i.id }}|| Village: {{ i.village }}</h6>
                                     <hr>
+                                    <p class="card-text">Product: {{ i.product_name }} </p>
                                     <p class="card-text">Delivery Date:{{ i.delivery_date }} </p>
                                     <p class="card-text">Delivered: {{ i.quant_delivered }}</p>
                                     <P class="card-text">Total Quantity: {{ i.quantity }}</P>
+                                    <p class="card-text">Phone Number: {{ i.mobile_number }} </p>
                                     <hr>
                                     <h6 class="card-subtitle mb-2 text-muted">Order Date: {{ i.order_date }}</h6>
                                     <hr>

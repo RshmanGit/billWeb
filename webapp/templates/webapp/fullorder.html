@@ -73,12 +73,14 @@
                 {% if i.delivered %}
                     <div class="card text-white bg-success">
                         <div class="card-body">    
-                            <h4 class="card-title">Name: {{ i.name }}</h4>
+                            <h4 class="card-title">Name: {{ i.customer_name }}</h4>
                             <h6 class="card-subtitle mb-2">ID: {{ i.id }}|| Village: {{ i.village }}</h6>
                             <hr>
+                            <p class="card-text">Product Name:{{ i.product_name }} </p>
                             <p class="card-text">Delivery Date:{{ i.delivery_date }} </p>
                             <p class="card-text">Delivered: {{ i.quant_delivered }}</p>
                             <P class="card-text">Total Quantity: {{ i.quantity }}</P>
+                            <p class="card-text">Phone NUmber:{{ i.mobile_number }} </p>
                             <hr>
                             <P class="card-text">Delivered</P>
                             <hr>
@@ -96,14 +98,16 @@
                 {% else %}
                     <div class="card text-white bg-warning">
                         <div class="card-body">    
-                            <h4 class="card-title">Name: {{ i.name }}</h4>
+                            <h4 class="card-title">Name: {{ i.customer_name }}</h4>
                             <h6 class="card-subtitle mb-2">ID: {{ i.id }}|| Village: {{ i.village }}</h6>
                             <hr>
+                            <p class="card-text">Product Name:{{ i.product_name }} </p>
                             <p class="card-text">Delivery Date:{{ i.delivery_date }} </p>
                             <p class="card-text">Delivered: {{ i.quant_delivered }}</p>
                             <P class="card-text">Total Quantity: {{ i.quantity }}</P>
+                            <p class="card-text">Phone NUmber:{{ i.mobile_number }} </p>
                             <hr>
-                            <P class="card-text">Delivery Pending</P>
+                            <P class="card-text">Delivered</P>
                             <hr>
                             <h6 class="card-subtitle mb-2">Order Date: {{ i.order_date }}</h6>
                         </div>
