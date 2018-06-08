@@ -9,9 +9,6 @@ import requests
 from bson import json_util
 import json
 
-login_fail = False
-errorflag = False
-
 # Create your views here.
 #@csrf_exempt
 def loginreq(request):
@@ -23,6 +20,7 @@ def loginreq(request):
     }
     return HttpResponse(html.render(context,request))
 
+#@csrf_exempt
 def errorIndex(request):
     html = loader.get_template("webapp/index.html")
     context = {
@@ -32,9 +30,10 @@ def errorIndex(request):
     }
     return HttpResponse(html.render(context, request))
 
+#@csrf_exempt
 def errorHome(request):
     try:
-        if request.user:
+        if request.user.is_authenticated:
             obtdData = obtainTodayData()
             html = loader.get_template("webapp/home.html")
             context = {
@@ -54,9 +53,10 @@ def errorHome(request):
         html = errorIndex(request)
         return html
 
+#@csrf_exempt
 def sucHome(request):
     try:
-        if request.user:
+        if request.user.is_authenticated:
             obtdData = obtainTodayData()
             html = loader.get_template("webapp/home.html")
             context = {
@@ -77,6 +77,7 @@ def sucHome(request):
         html = errorIndex(request)
         return html
     
+#@csrf_exempt
 def loginFail(request):
     html = loader.get_template("webapp/index.html")
     context = {
@@ -87,11 +88,11 @@ def loginFail(request):
     return HttpResponse(html.render(context, request))
 
 
-
+#@csrf_exempt
 def autho(request):
     try:
         user = authenticate(username=request.POST['username'], password=request.POST['password'])
-        if user is not None:
+        if user.is_authenticated:
             obtdData = obtainTodayData()
             login(request, user)
             html = loader.get_template("webapp/home.html")
@@ -111,9 +112,10 @@ def autho(request):
         html = errorIndex(request)
         return html
     
+#@csrf_exempt
 def home(request):
     try:
-        if request.user:
+        if request.user.is_authenticated:
             obtdData = obtainTodayData()
             html = loader.get_template("webapp/home.html")
             context = {
@@ -132,6 +134,7 @@ def home(request):
         html = errorIndex(request)
         return html
     
+#@csrf_exempt
 def register(request):
     try:
         html = loader.get_template("webapp/registerPage.html")
@@ -145,6 +148,7 @@ def register(request):
         html = errorIndex(request)
         return html
     
+#@csrf_exempt
 def registerReq(request):
     try:
         username = request.POST['username']
@@ -162,6 +166,7 @@ def registerReq(request):
         html = errorIndex(request)
         return html
       
+#@csrf_exempt
 def insertOrder(request):
     try:
         html = loader.get_template("webapp/insertO.html")
@@ -175,6 +180,7 @@ def insertOrder(request):
         html = errorHome(request)
         return html
     
+#@csrf_exempt
 def insertOrderReq(request):
     try:
         URL = "http://localhost:4000/api/v1/order/"
@@ -220,7 +226,7 @@ def insertOrderReq(request):
         html = errorHome(request)
         return html
     
-
+#@csrf_exempt
 def insertRawMat(request):
     try:
         html = loader.get_template("webapp/insertR.html")
@@ -234,6 +240,7 @@ def insertRawMat(request):
         html = errorHome(request)
         return html
         
+#@csrf_exempt
 def insertRawMatReq(request):
     try:
         URL = "http://localhost:4000/api/v1/rawMat/"
@@ -269,6 +276,7 @@ def insertRawMatReq(request):
         html = errorHome(request)
         return html
     
+#@csrf_exempt
 def insertExps(request):
     try:
         html = loader.get_template("webapp/insertE.html")
@@ -282,6 +290,7 @@ def insertExps(request):
         html = errorHome(request)
         return html
     
+#@csrf_exempt
 def insertExpsReq(request):
     try:
         URL = "http://localhost:4000/api/v1/exps/"
@@ -315,6 +324,7 @@ def insertExpsReq(request):
         html = errorHome(request)
         return html
     
+#@csrf_exempt
 def obtainTodayData():
     try:
         data = {}
@@ -337,6 +347,7 @@ def obtainTodayData():
     except:
         return False
     
+#@csrf_exempt
 def fullorderscall():
     try:
         URL = "http://localhost:4000/api/v1/order/"
@@ -352,6 +363,7 @@ def fullorderscall():
     except Exception as e:
         return False
     
+#@csrf_exempt
 def fullorders(request):
     try:
         data = []
@@ -369,6 +381,7 @@ def fullorders(request):
         html = errorHome(request)
         return html
     
+#@csrf_exempt
 def fullrawmatscall():
     try:
         URL = "http://localhost:4000/api/v1/rawMat/"
@@ -384,6 +397,7 @@ def fullrawmatscall():
     except Exception as e:
         return False
     
+#@csrf_exempt
 def fullrawmat(request):
     try:
         data = []
@@ -401,6 +415,7 @@ def fullrawmat(request):
         html = errorHome(request)
         return html
     
+#@csrf_exempt
 def fullexpscall():
     try:
         URL = "http://localhost:4000/api/v1/exps/"
@@ -416,6 +431,7 @@ def fullexpscall():
     except Exception as e:
         return False
     
+#@csrf_exempt
 def fullexps(request):
     try:
         data = []
@@ -433,12 +449,14 @@ def fullexps(request):
         html = errorHome(request)
         return html
     
+#@csrf_exempt
 def logoutreq(request):
     logout(request)
     html = loader.get_template("webapp/index.html")
     context = {}
     return HttpResponse(html.render(context, request))
 
+#@csrf_exempt
 def getOrder(Id):
     URL = "http://localhost:4000/api/v1/order/" + str(Id)
     data = []
@@ -448,6 +466,7 @@ def getOrder(Id):
     
     return temp
 
+#@csrf_exempt
 def updateOrder(request,Id):
     
     order = getOrder(Id)
@@ -458,6 +477,7 @@ def updateOrder(request,Id):
     
     return HttpResponse(html.render(context, request))
 
+#@csrf_exempt
 def updateOrderReq(request,Id):
     try:
         URL = "http://localhost:4000/api/v1/order/"
@@ -508,6 +528,7 @@ def updateOrderReq(request,Id):
         html = errorHome(request)
         return HttpResponse(html)
     
+#@csrf_exempt
 def getRawMat(gatePass):
     URL = "http://localhost:4000/api/v1/rawMat/" + str(gatePass)
     data = []
@@ -517,6 +538,7 @@ def getRawMat(gatePass):
     
     return temp
 
+#@csrf_exempt
 def updateRawMat(request,gatePass):
     
     rawMat = getRawMat(gatePass)
@@ -527,6 +549,7 @@ def updateRawMat(request,gatePass):
     
     return HttpResponse(html.render(context, request))
 
+#@csrf_exempt
 def updateRawMatReq(request, gatePass):
     
     try:
